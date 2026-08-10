@@ -6,12 +6,19 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "setup:admin": "node scripts/setup-admin.mjs",
+    "finish:setup": "node scripts/finish-setup.mjs",
+    "deploy:rules": "firebase deploy --only firestore:rules"
   },
   "dependencies": {
+    "firebase": "^12.17.1",
+    "framer-motion": "^13.0.0",
+    "lucide-react": "^1.30.0",
     "next": "16.3.0",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "sweetalert2": "^11.26.25"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

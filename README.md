@@ -1,5 +1,9 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+> **Dokumentasi lengkap aplikasi POS ada di [DOCS.md](DOCS.md)** — arsitektur,
+> model data, aturan keamanan, setup dari nol, penyimpanan gambar, dan
+> penyelesaian masalah.
+
 ## Getting Started
 
 First, run the development server:
@@ -17,6 +21,44 @@ bun dev
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+
+## Mengaktifkan login kasir
+
+Halaman `/` (pelanggan) terbuka untuk umum, sedangkan `/cashier` hanya boleh
+diakses akun admin. Yang benar-benar menahan akses adalah `firestore.rules`,
+bukan tampilan di browser — melewati layar login tidak memberi hak tulis apa pun.
+
+Aktivasi cukup dua langkah:
+
+**1. Nyalakan Authentication di Firebase Console** (sekali saja, tidak bisa lewat CLI)
+
+Buka [Authentication](https://console.firebase.google.com/project/input-icip/authentication)
+→ **Get started**, lalu di tab **Sign-in method** aktifkan dua provider:
+
+| Provider | Dipakai untuk |
+| --- | --- |
+| Email/Password | login kasir di `/cashier` |
+| Anonymous | sesi pelanggan agar boleh mengirim pesanan |
+
+**2. Buat akun admin dan aktifkan rules**
+
+```bash
+npm run setup:admin -- kasir@ubicheese.id <password>
+```
+
+Perintah ini mendaftarkan akun, menulis dokumen penanda `admins/<uid>`, lalu
+men-deploy `firestore.rules`. Urutannya disengaja: kalau rules ketat aktif
+sebelum ada admin, tidak ada satu pun akun yang bisa masuk ke `/cashier`.
+
+Untuk menambah admin lain, jalankan perintah yang sama dengan email berbeda.
+Menonaktifkan seorang admin cukup dengan menghapus dokumen `admins/<uid>` —
+akunnya tetap ada tapi kehilangan seluruh hak tulis.
+
+Kalau rules diubah tanpa menyentuh akun:
+
+```bash
+npm run deploy:rules
+```
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
