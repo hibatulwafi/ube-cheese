@@ -33,7 +33,7 @@ export function CashierLogin() {
   };
 
   return (
-    <div className="h-screen bg-background flex items-center justify-center p-6 relative overflow-hidden">
+    <div className="min-h-dvh bg-background flex items-center justify-center p-4 sm:p-6 relative overflow-hidden">
       <div className="absolute top-[-20%] right-[-10%] w-[60vh] h-[60vh] rounded-full bg-primary/5 blur-3xl pointer-events-none" />
       <div className="absolute bottom-[-20%] left-[-10%] w-[40vh] h-[40vh] rounded-full bg-primary/5 blur-3xl pointer-events-none" />
 
@@ -41,7 +41,7 @@ export function CashierLogin() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ type: "spring", damping: 20, stiffness: 300 }}
-        className="bg-card rounded-3xl p-8 w-full max-w-md shadow-2xl relative overflow-hidden border border-border/60"
+        className="bg-card rounded-2xl sm:rounded-3xl p-6 sm:p-8 w-full max-w-md shadow-2xl relative overflow-hidden border border-border/60"
       >
         <div className="absolute top-0 left-0 w-full h-1 bg-primary rounded-t-3xl" />
 

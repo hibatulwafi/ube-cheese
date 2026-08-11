@@ -71,16 +71,16 @@ export function MenuCard({
         )}
       </div>
 
-      <div className="flex shrink-0 flex-col gap-1 p-3.5 md:p-4">
-        <h3 className="truncate text-base font-bold text-foreground md:text-lg">
+      <div className="flex shrink-0 flex-col gap-1 p-3 sm:p-4">
+        <h3 className="truncate text-sm sm:text-base md:text-lg font-bold text-foreground">
           {name}
         </h3>
-        <p className="line-clamp-1 text-xs text-muted md:text-sm">
+        <p className="line-clamp-1 text-[11px] sm:text-xs md:text-sm text-muted">
           {description}
         </p>
 
-        <div className="mt-1.5 flex items-center justify-between gap-2">
-          <span className="text-base font-black text-primary md:text-lg">
+        <div className="mt-1 sm:mt-1.5 flex items-center justify-between gap-1.5">
+          <span className="text-sm sm:text-base md:text-lg font-black text-primary">
             {formattedPrice}
           </span>
 
@@ -88,14 +88,14 @@ export function MenuCard({
             onClick={onAdd}
             disabled={!isAvailable}
             aria-label={`Tambah ${name}`}
-            className={`flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-2 text-sm font-bold transition-all active:scale-95 md:px-4 ${
+            className={`flex shrink-0 items-center gap-1 sm:gap-1.5 rounded-full px-2.5 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-bold transition-all active:scale-95 ${
               isAvailable
                 ? "btn-primary-gradient text-white shadow-md shadow-primary/25 hover:shadow-lg hover:shadow-primary/30"
                 : "cursor-not-allowed bg-border text-muted"
             }`}
           >
-            <Plus size={16} />
-            <span className="hidden sm:inline">Tambah</span>
+            <Plus size={14} className="sm:w-4 sm:h-4" />
+            <span className="inline">Tambah</span>
           </button>
         </div>
       </div>

@@ -105,32 +105,32 @@ export default function CustomerHome() {
 
   return (
     <main className="relative flex h-dvh flex-col overflow-hidden bg-background">
-      <header className="z-10 flex shrink-0 items-center justify-between gap-4 border-b border-border/60 px-5 py-4 glass md:px-8 md:py-5">
-        <div className="flex items-center">
-          <img src="/logo.png" alt="Ube Cheese Logo" className="h-8 md:h-10 w-auto object-contain drop-shadow-sm" />
+      <header className="z-10 flex shrink-0 items-center justify-between gap-3 border-b border-border/60 px-4 sm:px-6 md:px-8 py-3 sm:py-4 glass">
+        <div className="flex items-center gap-3">
+          <img src="/logo.png" alt="Ube Cheese Logo" className="h-7 sm:h-8 md:h-10 w-auto object-contain drop-shadow-sm" />
         </div>
-        <p className="hidden text-sm font-medium text-muted sm:block">
+        <p className="hidden text-xs sm:text-sm font-medium text-muted sm:block">
           Selamat datang! Silakan pilih pesanan Anda.
         </p>
       </header>
 
-      {/* Tablet potret menumpuk (menu di atas, keranjang di bawah);
+      {/* Main Container: Mobile potret menumpuk (menu di atas, keranjang di bawah);
           mulai lg layarnya cukup lebar untuk berdampingan. */}
-      <div className="relative z-10 flex min-h-0 flex-1 flex-col gap-4 p-4 lg:flex-row lg:gap-5 lg:p-5">
-        <section className="flex min-h-0 flex-1 flex-col gap-3 lg:w-[62%]">
+      <div className="relative z-10 flex min-h-0 flex-1 flex-col gap-3 sm:gap-4 p-3 sm:p-4 lg:flex-row lg:gap-5 lg:p-5">
+        <section className="flex min-h-0 flex-1 flex-col gap-2.5 sm:gap-3 lg:w-[62%]">
           {loadingMenus ? (
             <div className="flex flex-1 items-center justify-center">
-              <Loader2 className="animate-spin text-primary" size={40} />
+              <Loader2 className="animate-spin text-primary" size={36} />
             </div>
           ) : menus.length === 0 ? (
-            <div className="flex flex-1 flex-col items-center justify-center text-muted">
-              <UtensilsCrossed size={52} className="mb-4 opacity-40" />
-              <p className="text-lg font-semibold">Belum ada menu tersedia.</p>
-              <p className="mt-1 text-sm">Tambahkan menu di halaman Kasir.</p>
+            <div className="flex flex-1 flex-col items-center justify-center text-muted p-6">
+              <UtensilsCrossed size={48} className="mb-3 opacity-40" />
+              <p className="text-base sm:text-lg font-semibold">Belum ada menu tersedia.</p>
+              <p className="mt-1 text-xs sm:text-sm">Tambahkan menu di halaman Kasir.</p>
             </div>
           ) : (
             <>
-              <div className="grid min-h-0 flex-1 grid-cols-2 grid-rows-2 gap-3 md:gap-4">
+              <div className="grid min-h-0 flex-1 grid-cols-2 grid-rows-2 gap-2.5 sm:gap-3 md:gap-4">
                 {visibleMenus.map((menu) => (
                   <MenuCard
                     key={menu.id}
@@ -148,28 +148,28 @@ export default function CustomerHome() {
               {totalPages > 1 && (
                 <nav
                   aria-label="Navigasi halaman menu"
-                  className="flex shrink-0 items-center justify-center gap-4"
+                  className="flex shrink-0 items-center justify-center gap-3 sm:gap-4 pt-0.5"
                 >
                   <button
                     onClick={() => setPage(Math.max(0, currentPage - 1))}
                     disabled={currentPage === 0}
                     aria-label="Halaman sebelumnya"
-                    className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card text-primary shadow-sm transition-all active:scale-95 hover:bg-primary-soft disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-card"
+                    className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full border border-border bg-card text-primary shadow-sm transition-all active:scale-95 hover:bg-primary-soft disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-card"
                   >
-                    <ChevronLeft size={20} />
+                    <ChevronLeft size={18} className="sm:w-5 sm:h-5" />
                   </button>
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1.5 sm:gap-2">
                     {Array.from({ length: totalPages }, (_, i) => (
                       <button
                         key={i}
                         onClick={() => setPage(i)}
                         aria-label={`Halaman ${i + 1}`}
                         aria-current={i === currentPage ? "page" : undefined}
-                        className={`h-2.5 rounded-full transition-all ${
+                        className={`h-2 sm:h-2.5 rounded-full transition-all ${
                           i === currentPage
-                            ? "w-7 bg-primary"
-                            : "w-2.5 bg-primary/25 hover:bg-primary/45"
+                            ? "w-5 sm:w-7 bg-primary"
+                            : "w-2 sm:w-2.5 bg-primary/25 hover:bg-primary/45"
                         }`}
                       />
                     ))}
@@ -179,9 +179,9 @@ export default function CustomerHome() {
                     onClick={() => setPage(Math.min(totalPages - 1, currentPage + 1))}
                     disabled={currentPage >= totalPages - 1}
                     aria-label="Halaman berikutnya"
-                    className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card text-primary shadow-sm transition-all active:scale-95 hover:bg-primary-soft disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-card"
+                    className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full border border-border bg-card text-primary shadow-sm transition-all active:scale-95 hover:bg-primary-soft disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-card"
                   >
-                    <ChevronRight size={20} />
+                    <ChevronRight size={18} className="sm:w-5 sm:h-5" />
                   </button>
                 </nav>
               )}
@@ -189,7 +189,7 @@ export default function CustomerHome() {
           )}
         </section>
 
-        <aside className="h-[42vh] shrink-0 lg:h-full lg:w-[38%]">
+        <aside className="h-[36vh] sm:h-[40vh] shrink-0 lg:h-full lg:w-[38%]">
           <Cart
             items={cart}
             onUpdateQuantity={handleUpdateQuantity}
@@ -208,15 +208,17 @@ export default function CustomerHome() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/40 p-6 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/40 p-4 sm:p-6 backdrop-blur-sm overflow-y-auto"
           >
             <motion.div
               initial={{ scale: 0.95, y: 24 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.95, y: 24 }}
               transition={{ type: "spring", damping: 20, stiffness: 300 }}
-              className={`relative overflow-hidden rounded-3xl bg-card p-8 shadow-2xl transition-all duration-300 ${
-                orderSuccess ? "w-[90vw] h-[90vh] max-w-[90vw] max-h-[90vh] flex flex-col" : "w-full max-w-md"
+              className={`relative overflow-hidden rounded-2xl sm:rounded-3xl bg-card p-5 sm:p-8 shadow-2xl transition-all duration-300 my-auto flex flex-col ${
+                orderSuccess
+                  ? "w-[90vw] max-w-[90vw] h-[90vh] min-h-[90vh] max-h-[90vh] overflow-y-auto"
+                  : "w-full max-w-md max-h-[90vh]"
               }`}
             >
               <div className="absolute left-0 top-0 h-1 w-full btn-primary-gradient" />
@@ -225,35 +227,35 @@ export default function CustomerHome() {
                 <motion.div
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="flex flex-col md:flex-row items-stretch gap-8 py-2 md:py-4 h-full w-full overflow-hidden"
+                  className="flex flex-col landscape:flex-row md:flex-row items-stretch gap-6 sm:gap-8 py-2 md:py-4 w-full h-full flex-1 overflow-hidden"
                 >
-                  <div className="flex-1 text-center flex flex-col justify-between items-center order-2 md:order-1 h-full py-4">
-                    <div className="flex flex-col items-center justify-center flex-1">
-                      <div className="mb-6 flex h-20 w-20 md:h-24 md:w-24 items-center justify-center rounded-full bg-success-soft">
-                        <svg className="h-10 w-10 md:h-12 md:w-12 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="flex-1 text-center flex flex-col justify-between items-center order-2 landscape:order-1 md:order-1 py-2 sm:py-4 h-full">
+                    <div className="flex flex-col items-center justify-center my-auto">
+                      <div className="mb-4 sm:mb-6 flex h-16 w-16 sm:h-20 sm:w-20 md:h-24 md:w-24 items-center justify-center rounded-full bg-success-soft">
+                        <svg className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                         </svg>
                       </div>
-                      <h2 className="mb-2 text-2xl md:text-4xl font-bold">Pesanan Diterima!</h2>
-                      <p className="mb-8 text-muted md:text-xl max-w-md">
+                      <h2 className="mb-2 text-xl sm:text-2xl md:text-4xl font-bold">Pesanan Diterima!</h2>
+                      <p className="mb-4 sm:mb-6 text-xs sm:text-sm md:text-xl text-muted max-w-md">
                         Silakan lakukan pembayaran QRIS dan tunjukkan bukti transfer ke kasir.
                       </p>
                     </div>
                     <button
                       onClick={handleCloseSuccess}
-                      className="w-full md:w-auto px-8 md:px-16 py-4 text-lg font-bold text-white rounded-2xl btn-primary-gradient shadow-lg shadow-primary/25 active:scale-95 transition-all"
+                      className="w-full md:w-auto px-6 sm:px-8 md:px-16 py-3 sm:py-4 text-sm sm:text-base md:text-lg font-bold text-white rounded-xl sm:rounded-2xl btn-primary-gradient shadow-lg shadow-primary/25 active:scale-95 transition-all mt-auto"
                     >
                       Selesai & Tutup
                     </button>
                   </div>
-                  <div className="flex-1 w-full h-[45vh] md:h-full flex justify-center items-center bg-white rounded-3xl p-3 border-2 border-border shadow-sm order-1 md:order-2 overflow-hidden">
-                    <img src="/qris-payment.jpeg" alt="QRIS Payment" className="w-full h-full object-contain rounded-2xl" />
+                  <div className="flex-1 w-full h-full min-h-0 flex justify-center items-center bg-white rounded-2xl sm:rounded-3xl p-3 sm:p-5 border-2 border-border shadow-sm order-1 landscape:order-2 md:order-2 overflow-hidden">
+                    <img src="/qris-payment.jpeg" alt="QRIS Payment" className="w-full h-full object-contain rounded-xl sm:rounded-2xl max-h-full" />
                   </div>
                 </motion.div>
               ) : (
                 <>
-                  <h2 className="mb-1 mt-2 text-3xl font-bold text-primary">Hampir Selesai!</h2>
-                  <p className="mb-8 text-muted">Masukkan nama Anda untuk melanjutkan.</p>
+                  <h2 className="mb-1 mt-1 text-2xl sm:text-3xl font-bold text-primary">Hampir Selesai!</h2>
+                  <p className="mb-6 sm:mb-8 text-xs sm:text-sm text-muted">Masukkan nama Anda untuk melanjutkan.</p>
 
                   <input
                     type="text"
@@ -261,7 +263,7 @@ export default function CustomerHome() {
                     value={customerName}
                     onChange={(e) => setCustomerName(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && handleCheckoutProcess()}
-                    className="mb-6 w-full rounded-2xl border-2 border-border px-6 py-4 text-lg font-medium transition-colors focus:border-primary focus:outline-none"
+                    className="mb-5 sm:mb-6 w-full rounded-xl sm:rounded-2xl border-2 border-border px-4 sm:px-6 py-3 sm:py-4 text-base sm:text-lg font-medium transition-colors focus:border-primary focus:outline-none"
                     autoFocus
                   />
 
@@ -269,20 +271,20 @@ export default function CustomerHome() {
                     <button
                       onClick={() => setIsCheckout(false)}
                       disabled={isSubmitting}
-                      className="flex-1 rounded-2xl py-4 font-semibold text-muted transition-colors hover:bg-background disabled:opacity-50"
+                      className="flex-1 rounded-xl sm:rounded-2xl py-3 sm:py-4 font-semibold text-xs sm:text-sm text-muted transition-colors hover:bg-background disabled:opacity-50"
                     >
                       Batal
                     </button>
                     <button
                       disabled={!customerName.trim() || isSubmitting}
                       onClick={handleCheckoutProcess}
-                      className={`flex flex-1 items-center justify-center gap-2 rounded-2xl py-4 font-bold text-white transition-all active:scale-95 ${
+                      className={`flex flex-1 items-center justify-center gap-2 rounded-xl sm:rounded-2xl py-3 sm:py-4 font-bold text-xs sm:text-sm text-white transition-all active:scale-95 ${
                         customerName.trim() && !isSubmitting
                           ? "btn-primary-gradient shadow-lg shadow-primary/25"
                           : "cursor-not-allowed bg-border text-muted"
                       }`}
                     >
-                      {isSubmitting ? <Loader2 size={22} className="animate-spin" /> : "Kirim Pesanan"}
+                      {isSubmitting ? <Loader2 size={18} className="animate-spin" /> : "Kirim Pesanan"}
                     </button>
                   </div>
                 </>
@@ -292,7 +294,7 @@ export default function CustomerHome() {
         )}
       </AnimatePresence>
 
-      <footer className="z-10 shrink-0 text-center py-2.5 text-xs text-white/90 bg-primary font-medium flex items-center justify-center gap-1.5 print:hidden">
+      <footer className="z-10 shrink-0 text-center py-2 px-3 text-[10px] sm:text-xs text-white/90 bg-primary font-medium flex items-center justify-center gap-1.5 print:hidden">
         Build with <Heart size={12} className="fill-white text-white animate-pulse" /> by Team IT Hiro Group | v.1.0.0
       </footer>
     </main>

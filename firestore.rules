@@ -96,7 +96,7 @@ service cloud.firestore {
           && request.resource.data.created_by == request.auth.uid;
 
         allow update: if isAdmin() && isStatusOnlyUpdate();
-        allow delete: if false;
+        allow delete: if isAdmin();
       }
     }
 

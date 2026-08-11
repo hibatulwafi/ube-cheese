@@ -106,6 +106,17 @@ export const updateOrderStatus = async (
   }
 };
 
+/** Hapus pesanan permanen (Kasir/Admin) */
+export const deleteOrder = async (orderId: string) => {
+  try {
+    await deleteDoc(orderDocRef(orderId));
+    return { success: true };
+  } catch (error) {
+    console.error("Error deleting order: ", error);
+    return { success: false, error };
+  }
+};
+
 // ─────────────────────────────────────────────
 // MENU API
 // ─────────────────────────────────────────────
