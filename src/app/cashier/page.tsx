@@ -4,13 +4,21 @@ import { useEffect, useState, useCallback } from "react";
 import { subscribeToOrders, subscribeToMenus, updateOrderStatus, addMenu, updateMenu, deleteMenu, deleteOrder } from "@/lib/api";
 import { MenuItem, Order } from "@/types";
 import { motion, AnimatePresence } from "framer-motion";
-import { ClipboardList, UtensilsCrossed, Plus, Pencil, Trash2, CheckCircle, Printer, X, Loader2, ToggleLeft, ToggleRight, LogOut, RefreshCw } from "lucide-react";
+import { ClipboardList, UtensilsCrossed, Plus, Pencil, Trash2, CheckCircle, Printer, X, Loader2, ToggleLeft, ToggleRight, LogOut, RefreshCw, Download } from "lucide-react";
 import { useAuth } from "@/components/AuthProvider";
 import { signOutUser } from "@/lib/auth";
 import { CategoryBadge } from "@/components/CategoryBadge";
 import { CATEGORY_NAMES } from "@/lib/categories";
 import Swal from "sweetalert2";
 import { useVisibilityReconnect } from "@/hooks/useVisibilityReconnect";
+import {
+  buildCsvFilename,
+  buildOrdersCsv,
+  downloadCsv,
+  filterOrdersByPeriod,
+  type ExportFormat,
+  type ExportPeriod,
+} from "@/lib/exportCsv";
 
 type ActiveTab = "orders" | "menus";
 
@@ -126,6 +134,83 @@ export default function CashierDashboard() {
   // Buka struk di tab baru — kompatibel dengan semua device termasuk mobile & tablet
   const handlePrint = (order: Order) => {
     window.open(`/receipt/${order.id}`, "_blank");
+  };
+
+  const handleExportCsv = async () => {
+    if (orders.length === 0) {
+      Swal.fire({
+        title: "Belum Ada Data",
+        text: "Tidak ada pesanan yang bisa diexport.",
+        icon: "info",
+        confirmButtonColor: "#2f9e64",
+      });
+      return;
+    }
+
+    // Inline style, bukan class Tailwind/SweetAlert — konten `html` Swal berada
+    // di luar tree React sehingga lebih aman tidak bergantung pada CSS eksternal.
+    const labelStyle = "display:block;font-size:13px;font-weight:600;margin-bottom:6px";
+    const selectStyle =
+      "width:100%;padding:10px 12px;font-size:14px;border:2px solid #e5e0de;border-radius:12px;background:#fff;color:inherit;outline:none";
+
+    const result = await Swal.fire<{ period: ExportPeriod; format: ExportFormat }>({
+      title: "Export Data Pesanan",
+      html: `
+        <div style="text-align:left">
+          <label for="export-period" style="${labelStyle}">Rentang Waktu</label>
+          <select id="export-period" style="${selectStyle}">
+            <option value="all">Semua Pesanan</option>
+            <option value="today">Hari Ini</option>
+            <option value="month">Bulan Ini</option>
+          </select>
+
+          <label for="export-format" style="${labelStyle};margin-top:16px">Format Baris</label>
+          <select id="export-format" style="${selectStyle}">
+            <option value="summary">Ringkasan — 1 baris per pesanan</option>
+            <option value="detail">Detail — 1 baris per item menu</option>
+          </select>
+        </div>
+      `,
+      focusConfirm: false,
+      showCancelButton: true,
+      confirmButtonText: "Download CSV",
+      cancelButtonText: "Batal",
+      confirmButtonColor: "#2f9e64",
+      cancelButtonColor: "#8c7a75",
+      preConfirm: () => {
+        const periodEl = document.getElementById("export-period") as HTMLSelectElement | null;
+        const formatEl = document.getElementById("export-format") as HTMLSelectElement | null;
+        return {
+          period: (periodEl?.value ?? "all") as ExportPeriod,
+          format: (formatEl?.value ?? "summary") as ExportFormat,
+        };
+      },
+    });
+
+    if (!result.isConfirmed || !result.value) return;
+
+    const { period, format } = result.value;
+    const rows = filterOrdersByPeriod(orders, period);
+
+    if (rows.length === 0) {
+      Swal.fire({
+        title: "Data Kosong",
+        text: "Tidak ada pesanan pada rentang waktu yang dipilih.",
+        icon: "info",
+        confirmButtonColor: "#2f9e64",
+      });
+      return;
+    }
+
+    downloadCsv(buildCsvFilename(period, format), buildOrdersCsv(rows, format));
+
+    Swal.fire({
+      title: "Berhasil Diexport!",
+      text: `${rows.length} pesanan tersimpan ke file CSV.`,
+      icon: "success",
+      timer: 1800,
+      showConfirmButton: false,
+    });
   };
 
   const handleDeleteOrder = async (orderId: string) => {
@@ -351,15 +436,25 @@ export default function CashierDashboard() {
                 <h1 className="text-xl sm:text-2xl font-bold">Pesanan Masuk</h1>
                 <p className="text-xs sm:text-sm text-muted mt-0.5">Pesanan akan muncul otomatis saat pelanggan mengirim.</p>
               </div>
-              <button
-                onClick={handleRefresh}
-                disabled={isRefreshing}
-                className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 bg-card border border-border hover:bg-primary-soft hover:text-primary text-foreground rounded-xl text-xs sm:text-sm font-bold active:scale-95 transition-all shadow-sm shrink-0"
-                title="Refresh Data Pesanan"
-              >
-                <RefreshCw size={16} className={isRefreshing ? "animate-spin text-primary" : ""} />
-                <span className="hidden sm:inline">{isRefreshing ? "Memuat..." : "Refresh"}</span>
-              </button>
+              <div className="flex items-center gap-2 shrink-0">
+                <button
+                  onClick={handleExportCsv}
+                  className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 bg-card border border-border hover:bg-primary-soft hover:text-primary text-foreground rounded-xl text-xs sm:text-sm font-bold active:scale-95 transition-all shadow-sm"
+                  title="Export Data Pesanan ke CSV"
+                >
+                  <Download size={16} />
+                  <span className="hidden sm:inline">Export CSV</span>
+                </button>
+                <button
+                  onClick={handleRefresh}
+                  disabled={isRefreshing}
+                  className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 bg-card border border-border hover:bg-primary-soft hover:text-primary text-foreground rounded-xl text-xs sm:text-sm font-bold active:scale-95 transition-all shadow-sm"
+                  title="Refresh Data Pesanan"
+                >
+                  <RefreshCw size={16} className={isRefreshing ? "animate-spin text-primary" : ""} />
+                  <span className="hidden sm:inline">{isRefreshing ? "Memuat..." : "Refresh"}</span>
+                </button>
+              </div>
             </div>
 
             <div className="flex-1 overflow-y-auto p-3 sm:p-5 md:p-6 custom-scrollbar">
