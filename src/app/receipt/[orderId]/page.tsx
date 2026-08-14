@@ -82,7 +82,7 @@ export default function ReceiptPage() {
         <div className="text-center mb-4">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/logo.png" alt="Ube Cheese" className="h-10 mx-auto object-contain grayscale mb-1" />
-          <p className="text-xs text-gray-500">Struk Pesanan</p>
+          <p className="text-xs font-bold text-gray-700">Struk Pesanan</p>
         </div>
 
         <div className="divider" />
@@ -105,8 +105,8 @@ export default function ReceiptPage() {
         <div className="mb-2">
           {order.items.map((item, i) => (
             <div key={i} className="mb-1.5">
-              <div className="font-medium">{item.name}</div>
-              <div className="flex justify-between text-xs text-gray-600">
+              <div className="font-bold">{item.name}</div>
+              <div className="flex justify-between text-xs font-semibold text-gray-800">
                 <span>{item.quantity} x {formatRupiah(item.price)}</span>
                 <span>{formatRupiah(item.price * item.quantity)}</span>
               </div>
@@ -125,27 +125,13 @@ export default function ReceiptPage() {
         <div className="divider" />
 
         {/* Footer */}
-        <div className="text-center text-xs text-gray-500 mt-2">
+        <div className="text-center text-xs font-semibold text-gray-800 mt-2">
           <p>Terima kasih atas kunjungan Anda!</p>
           <p className="mt-1 font-bold">*** LUNAS ***</p>
         </div>
       </div>
 
       <style>{`
-        @media print {
-          @page {
-            size: 80mm 200mm;
-            margin: 0;
-          }
-          body {
-            margin: 0;
-            padding: 0;
-            background: white;
-          }
-          .no-print {
-            display: none !important;
-          }
-        }
         .receipt-page {
           background: #f5f5f5;
           min-height: 100vh;
@@ -158,18 +144,12 @@ export default function ReceiptPage() {
           padding: 14px;
           box-sizing: border-box;
           font-size: 13px;
-          color: #111;
+          color: #000;
+          font-weight: 600;
           box-shadow: 0 2px 12px rgba(0,0,0,0.12);
         }
-        @media print {
-          .receipt-container {
-            margin: 0;
-            box-shadow: none;
-            width: 80mm;
-          }
-        }
         .divider {
-          border-top: 1px dashed #aaa;
+          border-top: 1px dashed #444;
           margin: 8px 0;
         }
         .info-grid {
@@ -179,11 +159,56 @@ export default function ReceiptPage() {
           font-size: 12px;
         }
         .info-grid span:nth-child(odd) {
-          color: #555;
+          color: #333;
         }
         .info-grid span:nth-child(even) {
           text-align: right;
-          font-weight: 600;
+          font-weight: 700;
+        }
+
+        @media print {
+          @page {
+            size: 80mm 200mm;
+            margin: 0;
+          }
+          html, body {
+            margin: 0;
+            padding: 0;
+            background: #fff !important;
+            /* Cegah browser menipiskan/menghaluskan warna saat cetak */
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+          }
+          .no-print {
+            display: none !important;
+          }
+          .receipt-container {
+            margin: 0;
+            box-shadow: none;
+            width: 80mm;
+            font-size: 13px;
+          }
+          /*
+            Printer thermal mengubah warna abu-abu jadi titik-titik jarang (dithering)
+            sehingga teks terlihat pudar. Paksa semua teks jadi hitam pekat + tebal,
+            lalu tambah sedikit text-stroke supaya garis huruf lebih padat.
+          */
+          .receipt-container,
+          .receipt-container * {
+            color: #000 !important;
+            font-weight: 700 !important;
+            -webkit-text-stroke: 0.22px #000;
+            text-shadow: none !important;
+            opacity: 1 !important;
+            filter: none;
+          }
+          .receipt-container .divider {
+            border-top: 1px dashed #000 !important;
+          }
+          /* Logo dipertegas agar tidak jadi abu-abu pucat */
+          .receipt-container img {
+            filter: grayscale(1) contrast(2.4) brightness(0.85) !important;
+          }
         }
       `}</style>
     </div>
