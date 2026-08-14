@@ -81,8 +81,8 @@ export default function ReceiptPage() {
         {/* Header */}
         <div className="text-center mb-4">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.png" alt="Ube Cheese" className="h-10 mx-auto object-contain grayscale mb-1" />
-          <p className="text-xs font-bold text-gray-700">Struk Pesanan</p>
+          <img src="/logo.png" alt="Ube Cheese" className="receipt-logo h-10 mx-auto object-contain mb-1" />
+          <p className="text-xs font-bold">Struk Pesanan</p>
         </div>
 
         <div className="divider" />
@@ -106,7 +106,7 @@ export default function ReceiptPage() {
           {order.items.map((item, i) => (
             <div key={i} className="mb-1.5">
               <div className="font-bold">{item.name}</div>
-              <div className="flex justify-between text-xs font-semibold text-gray-800">
+              <div className="flex justify-between text-xs font-bold">
                 <span>{item.quantity} x {formatRupiah(item.price)}</span>
                 <span>{formatRupiah(item.price * item.quantity)}</span>
               </div>
@@ -125,7 +125,7 @@ export default function ReceiptPage() {
         <div className="divider" />
 
         {/* Footer */}
-        <div className="text-center text-xs font-semibold text-gray-800 mt-2">
+        <div className="text-center text-xs font-bold mt-2">
           <p>Terima kasih atas kunjungan Anda!</p>
           <p className="mt-1 font-bold">*** LUNAS ***</p>
         </div>
@@ -138,18 +138,27 @@ export default function ReceiptPage() {
           font-family: 'Courier New', Courier, monospace;
         }
         .receipt-container {
-          background: white;
+          background: #fff;
           width: 80mm;
           margin: 20px auto;
           padding: 14px;
           box-sizing: border-box;
           font-size: 13px;
+          /* Hitam murni — tanpa abu-abu sama sekali */
           color: #000;
-          font-weight: 600;
+          font-weight: 700;
           box-shadow: 0 2px 12px rgba(0,0,0,0.12);
         }
+        /* Semua turunan dipaksa hitam, apa pun class Tailwind-nya */
+        .receipt-container * {
+          color: #000;
+        }
+        /* Logo dijadikan siluet hitam pekat (PNG punya alpha, jadi aman) */
+        .receipt-logo {
+          filter: brightness(0) saturate(100%);
+        }
         .divider {
-          border-top: 1px dashed #444;
+          border-top: 1px dashed #000;
           margin: 8px 0;
         }
         .info-grid {
@@ -158,12 +167,8 @@ export default function ReceiptPage() {
           gap: 2px 8px;
           font-size: 12px;
         }
-        .info-grid span:nth-child(odd) {
-          color: #333;
-        }
         .info-grid span:nth-child(even) {
           text-align: right;
-          font-weight: 700;
         }
 
         @media print {
@@ -190,24 +195,22 @@ export default function ReceiptPage() {
           }
           /*
             Printer thermal mengubah warna abu-abu jadi titik-titik jarang (dithering)
-            sehingga teks terlihat pudar. Paksa semua teks jadi hitam pekat + tebal,
-            lalu tambah sedikit text-stroke supaya garis huruf lebih padat.
+            sehingga teks terlihat pudar. Semua teks dipaksa hitam murni (#000) + tebal,
+            ditambah text-stroke supaya garis huruf lebih padat.
           */
           .receipt-container,
           .receipt-container * {
             color: #000 !important;
             font-weight: 700 !important;
-            -webkit-text-stroke: 0.22px #000;
+            -webkit-text-stroke: 0.35px #000;
             text-shadow: none !important;
             opacity: 1 !important;
-            filter: none;
           }
           .receipt-container .divider {
             border-top: 1px dashed #000 !important;
           }
-          /* Logo dipertegas agar tidak jadi abu-abu pucat */
-          .receipt-container img {
-            filter: grayscale(1) contrast(2.4) brightness(0.85) !important;
+          .receipt-logo {
+            filter: brightness(0) saturate(100%) !important;
           }
         }
       `}</style>
